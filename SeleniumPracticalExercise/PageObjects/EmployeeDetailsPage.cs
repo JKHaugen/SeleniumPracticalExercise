@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using SeleniumPracticalExercise.PageObjects.Common;
 
 namespace SeleniumPracticalExercise.PageObjects
@@ -8,6 +10,7 @@ namespace SeleniumPracticalExercise.PageObjects
         private readonly By _FoundEmployeeID = By.XPath("//label[text()='Employee Id']/parent::div/following-sibling::div/input");
         private readonly By _FoundEmployeeFirstName = By.CssSelector("input[name='firstName']");
         private readonly By _FoundEmployeeLastName = By.CssSelector("input[name='lastName']");
+        private readonly By _EmployeeSaved = By.LinkText("Personal Details");
 
         public EmployeeDetailsPage(IWebDriver driver) : base(driver)
         {
@@ -19,7 +22,7 @@ namespace SeleniumPracticalExercise.PageObjects
         /// <returns>The id of the employee</returns>
         public string GrabFoundEmployeeID()
         {
-            return GetValue(_FoundEmployeeID);
+            return WaitForFilledString(_FoundEmployeeID, 2);
         }
 
         /// <summary>
@@ -28,7 +31,7 @@ namespace SeleniumPracticalExercise.PageObjects
         /// <returns>The first name of the employee</returns>
         public string GrabFoundEmployeeFirstName()
         {
-            return GetValue(_FoundEmployeeFirstName);
+            return WaitForFilledString(_FoundEmployeeFirstName, 1);
         }
 
         /// <summary>
@@ -38,7 +41,34 @@ namespace SeleniumPracticalExercise.PageObjects
         public string GrabFoundEmployeeLastName()
         {
 
-            return GetValue(_FoundEmployeeLastName);
+            return WaitForFilledString(_FoundEmployeeLastName, 1);
+        }
+
+        /// <summary>
+        /// Confirms the page loaded by looking for a specfic field to ensure the data was saved
+        /// </summary>
+        public void ConfirmPagedLoaded()
+        {
+            int timeout = 5;
+            WebDriverWait wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(timeout));
+            wait.Until(ExpectedConditions.ElementExists(_EmployeeSaved));
+        }
+
+        /// <summary>
+        /// Will attempt to return a field value by the given locator that is not an empty string within the timeout period
+        /// </summary>
+        /// <param name="locator">Field that is expected to not be an empty string</param>
+        /// <param name="timeout">Amount of time in seconds it will search for the non-empty string</param>
+        /// <returns>The value from the element or an empty string if the timeout runs out and no value was found</returns>
+        private string WaitForFilledString(By locator, int timeout)
+        {
+            string filledField = String.Empty;
+            DateTime now = DateTime.Now;
+            while (filledField.Equals(String.Empty) && DateTime.Now < now.AddSeconds(timeout))
+            {
+                filledField = GetValue(locator);
+            }
+            return filledField;
         }
     }
 }

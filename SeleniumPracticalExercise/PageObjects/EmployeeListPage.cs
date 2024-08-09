@@ -33,7 +33,6 @@ namespace SeleniumPracticalExercise.PageObjects
             EditBoxSendKeysAndVerify(_EmployeeIDSearch, employeeID);
             Click(_BtnSearchEmployeeData);
             Click(_FoundEmployee);
-            WaitAfterAction(3000);
         }
     }
 }

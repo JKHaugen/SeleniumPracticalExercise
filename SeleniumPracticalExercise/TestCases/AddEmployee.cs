@@ -23,20 +23,21 @@ namespace SeleniumPracticalExercise.TestCases
         /// <summary>
         /// Confirms a user is able to login to an Admin account, add a new employee, and then verifies the employee has been added.
         /// </summary>
-        /// <param name="username">Valid username is expected</param>
-        /// <param name="password">Valid password for the given username is expected</param>
-        /// <param name="IDLength">Number of digits the employee id will be set to</param>
-        /// <param name="lengthFirstName">Number of characters the first name will be set to</param>
-        /// <param name="lengthLastName">Number of characters the last name will be set to</param>
         [Test]
         [Category("Add Employee")]
-        [TestCase("Admin", "admin123", 4, 6, 8)]
-        public void AddEmployeeTest(string username, string password, int IDLength, int lengthFirstName, int lengthLastName)
+        public void AddEmployeeTest()
         {
+            string username = "Admin";
+            string password = "admin123";
+            int IDLength = 4;
+            int lengthFirstName = 6;
+            int lengthLastName = 8;
+
+            string employeeID, generatedFirstName, generatedLastName;
+
             if (Driver.Value == null)
                 return;
 
-            string employeeID, generatedFirstName, generatedLastName;
             // Steps to automate:
 
             // 2. Log in using Username: Admin, Password: admin123
@@ -58,9 +59,11 @@ namespace SeleniumPracticalExercise.TestCases
 
             // 6. Get the Employee Id for use later
             employeeID = addEmployeePage.InputAndReturnEmployeeID(IDLength);
+            EmployeeDetailsPage employeeDetailsPage = new EmployeeDetailsPage(Driver.Value);
 
             // 7. Click Save
             addEmployeePage.ClickSaveButton();
+            employeeDetailsPage.ConfirmPagedLoaded();
 
             // 8. Click "PIM" in the left nav
             navigationBarPage.ClickPIMLink();
@@ -69,7 +72,6 @@ namespace SeleniumPracticalExercise.TestCases
             employeeListPage.SearchForEmployeeByEmployeeID(employeeID);
 
             // 9. In the employee search results, use NUnit asserts to validate that Id, First Name, and Last Name are correct
-            EmployeeDetailsPage employeeDetailsPage = new EmployeeDetailsPage(Driver.Value);
             Assert.That(employeeDetailsPage.GrabFoundEmployeeID(), Is.EqualTo(employeeID));
             Assert.That(employeeDetailsPage.GrabFoundEmployeeFirstName(), Is.EqualTo(generatedFirstName));
             Assert.That(employeeDetailsPage.GrabFoundEmployeeLastName(), Is.EqualTo(generatedLastName));

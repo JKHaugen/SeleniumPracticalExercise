@@ -1,4 +1,6 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using SeleniumPracticalExercise.Common;
 using SeleniumPracticalExercise.PageObjects.Common;
 
@@ -63,7 +65,6 @@ namespace SeleniumPracticalExercise.PageObjects
                 DeleteValue(_EmployeeIDData);
                 employeeID = Utils.GenerateRandomIntAsString(idLength);
                 EditBoxSendKeysAndVerify(_EmployeeIDData, employeeID);
-                WaitAfterAction(2000);
             }
             while (Exists(_SaveEmployeeError));
 
@@ -76,7 +77,6 @@ namespace SeleniumPracticalExercise.PageObjects
         public void ClickSaveButton()
         {
             Click(_SaveBtnEmployeeData);
-            WaitAfterAction(2000);
         }
     }
 }
