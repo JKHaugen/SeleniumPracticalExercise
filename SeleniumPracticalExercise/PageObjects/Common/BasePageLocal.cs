@@ -241,5 +241,33 @@ namespace SeleniumPracticalExercise.PageObjects.Common
                 throw new Exception("Something went wrong while sleeping.");
             }
         }
+
+        /// <summary>
+        /// Checks if the element exists
+        /// </summary>
+        /// <param name="locator">The locator used to find the element</param>
+        /// <returns>True for an existing visible element, false otherwise</returns>
+        public virtual bool Exists(By locator)
+        {
+            try
+            {
+                FindElement(locator);
+                return true;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Selects all the text at the given element then deletes all of the text
+        /// </summary>
+        /// <param name="locator">Element location to have all text deleted from</param>
+        public virtual void DeleteValue(By locator)
+        {
+            FindElement(ExpectedConditions.ElementIsVisible(locator)).SendKeys(Keys.Control + "a");
+            FindElement(ExpectedConditions.ElementIsVisible(locator)).SendKeys(Keys.Delete);
+        }
     }
 }

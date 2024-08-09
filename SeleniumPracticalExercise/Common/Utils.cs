@@ -20,5 +20,32 @@
 
             return new string(Enumerable.Repeat(chars, length).Select(s => s[Rnd.Next(s.Length)]).ToArray());
         }
+
+        /// <summary>
+        /// Returns a randomly generated int that can have up to a
+        /// maximum on 9 digits and a minimum of a single digit
+        /// </summary>
+        /// <param name="length">The number of possible digits in the random int, from 1 to 9</param>
+        /// <returns>The generated int</returns>
+        public static int GenerateRandomInt(int length)
+        {
+            length = Math.Clamp(length, 1, 9);
+            int generatedNumber = 0;
+            for (int i = 0; i < length; i++)
+                generatedNumber += Rnd.Next(10) * (int)Math.Pow(10, i);
+
+            return generatedNumber;
+        }
+
+        /// <summary>
+        /// Returns a randomly generated int as a string at the desired length, from 1 to 9 characters, by padding the leading
+        /// missing digits with 0 when the int value is shorter than the desired length
+        /// </summary>
+        /// <param name="length">The number of characters in the random string of numbers, from 1 to 9</param>
+        /// <returns>The generated string converted from an int</returns>
+        public static string GenerateRandomIntAsString(int length)
+        {
+            return $"{GenerateRandomInt(length)}".PadLeft(length,'0');
+        }
     }
 }
